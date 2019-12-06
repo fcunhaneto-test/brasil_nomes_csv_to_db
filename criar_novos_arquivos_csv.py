@@ -12,11 +12,11 @@ def criar_arquivo_ibge_nomes():
                      'ate2000', 'ate2010']].astype('int64', errors='ignore')
     df_ini.to_csv('novos_arquivos_csv/nomes_censos_ibge_novo.csv', index=0)
 
-    df_id = df_ini[['id', 'ate1930', 'ate1940', 'ate1950', 'ate1960', 'ate1970', 'ate1980', 'ate1990',
-                     'ate2000', 'ate2010']].astype('int64', errors='ignore')
+    df_id = df_ini[['id', 'ate1930', 'ate1940', 'ate1950', 'ate1960', 'ate1970', 'ate1980', 'ate1990', 'ate2000',
+                    'ate2010']].astype('int64', errors='ignore')
 
-    df_id = df_id.rename({'id': 'id_nome'}, axis=1)
-    df_id.to_csv('novos_arquivos_csv/ibge_nomes_censo_id.csv', index=0)
+    df_id = df_id.rename({'id': 'nome_id'}, axis=1)
+    df_id.to_csv('novos_arquivos_csv/ibge_quantidades.csv', index=0)
 
     df_nomes = df_ini[['id', 'nome']]
     df_nomes.to_csv('novos_arquivos_csv/ibge_nomes.csv', index=0)
@@ -39,8 +39,8 @@ def criar_arquivo_rank():
 
     df_end = df_end.fillna(0)
     df_end = df_end.astype('int64', errors='ignore')
-    df_end = df_end.rename({'id': 'id_rank'}, axis=1)
-    df_end.to_csv('novos_arquivos_csv/ibge_rank.csv', index=0)
+    df_end = df_end.rename({'id': 'nome_id'}, axis=1)
+    df_end.to_csv('novos_arquivos_csv/ibge_ranking.csv', index=0)
 
 
 def criar_arquivo_freq():
@@ -61,18 +61,18 @@ def criar_arquivo_freq():
         df_end = pd.merge(df_end, df_decada[['id', freq]], on='id', how='left')
 
     df_end = df_end.fillna(0)
-    df_end = df_end.rename({'id': 'id_freq'}, axis=1)
-    df_end.to_csv('novos_arquivos_csv/ibge_freq.csv', index=0)
+    df_end = df_end.rename({'id': 'nome_id'}, axis=1)
+    df_end.to_csv('novos_arquivos_csv/ibge_frequencia.csv', index=0)
 
 
 def criar_completo():
     df_ini = pd.read_csv('novos_arquivos_csv/nomes_censos_ibge_novo.csv', header=0)
-    df_rank = pd.read_csv('novos_arquivos_csv/ibge_rank.csv', header=0)
-    df_end = pd.merge(df_ini, df_rank, left_on='id', right_on='id_rank', how='left')
-    df_freq = pd.read_csv('novos_arquivos_csv/ibge_freq.csv', header=0)
-    df_end = pd.merge(df_end, df_freq, left_on='id', right_on='id_freq', how='left')
+    df_rank = pd.read_csv('novos_arquivos_csv/ibge_ranking.csv', header=0)
+    df_end = pd.merge(df_ini, df_rank, left_on='id', right_on='nome_id', how='left')
+    df_freq = pd.read_csv('novos_arquivos_csv/ibge_frequencia.csv', header=0)
+    df_end = pd.merge(df_end, df_freq, left_on='id', right_on='nome_id', how='left')
     df_end = df_end.fillna(0)
-    df_end = df_end.drop(['id_rank', 'id_freq'], axis=1)
+    df_end = df_end.drop(['nome_id_x', 'nome_id_y'], axis=1)
     df_end.to_csv('novos_arquivos_csv/ibge_completo.csv', index=0)
 
 
